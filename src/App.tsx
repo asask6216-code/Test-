@@ -16,22 +16,8 @@ export default function App() {
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       setDeferredPrompt(e);
-      toast('هل ترغب بتثبيت تطبيق Royal Silver؟', {
-        action: {
-          label: 'تثبيت',
-          onClick: () => {
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then((choiceResult: any) => {
-              if (choiceResult.outcome === 'accepted') {
-                console.log('User accepted the A2HS prompt');
-              }
-              setDeferredPrompt(null);
-            });
-          },
-        },
-      });
     });
-  }, [deferredPrompt]);
+  }, []);
   const [selectedCategory, setSelectedCategory] = useState("الكل");
   const [cart, setCart] = useState<{product: Product, size: string, modifiers: string[]}[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -195,6 +181,19 @@ export default function App() {
 
       {/* Corner Menu */}
       <div className="fixed bottom-6 right-4 z-40 flex flex-col gap-3">
+        {deferredPrompt && (
+          <button onClick={() => {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult: any) => {
+              if (choiceResult.outcome === 'accepted') {
+                console.log('User accepted the A2HS prompt');
+              }
+              setDeferredPrompt(null);
+            });
+          }} className="p-4 bg-[var(--color-neon-blue)] rounded-full text-black shadow-lg">
+            تثبيت
+          </button>
+        )}
         <button onClick={() => setCurrentPage('about')} className="p-4 bg-var(--color-bg-card) rounded-full text-var(--color-neon-blue) shadow-lg"><FileText size={20} /></button>
         <button onClick={() => setIsAIChatOpen(true)} className="p-4 bg-var(--color-bg-card) rounded-full text-var(--color-neon-blue) shadow-lg"><MessageCircle size={20} /></button>
       </div>
